@@ -178,6 +178,77 @@ if (contactForm) {
         });
     });
 
+    // Scroll Reveal Animation
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(reveal => revealObserver.observe(reveal));
+
+    // Slider Functionality
+    function initSlider(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const track = container.querySelector('.slider-track');
+        const nextBtn = container.querySelector('.slider-next');
+        const prevBtn = container.querySelector('.slider-prev');
+        const items = container.querySelectorAll('.slider-item');
+
+        let index = 0;
+
+        function updateSlider() {
+            const itemWidth = items[0].offsetWidth + 20; // width + gap
+            track.style.transform = `translateX(-${index * itemWidth}px)`;
+
+            // Handle buttons visibility or state if needed
+        }
+
+        nextBtn.addEventListener('click', () => {
+            const visibleItems = Math.floor(container.offsetWidth / items[0].offsetWidth);
+            if (index < items.length - visibleItems) {
+                index++;
+            } else {
+                index = 0; // Loop back
+            }
+            updateSlider();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (index > 0) {
+                index--;
+            } else {
+                const visibleItems = Math.floor(container.offsetWidth / items[0].offsetWidth);
+                index = items.length - visibleItems; // Go to last possible index
+            }
+            updateSlider();
+        });
+
+        // Resize handling
+        window.addEventListener('resize', updateSlider);
+    }
+
+    initSlider('recent-buys-slider');
+    initSlider('testimonials-slider');
+
+    // Auto-slide functionality (optional but nice)
+    function autoSlide(containerId, interval = 5000) {
+        const nextBtn = document.querySelector(`#${containerId} .slider-next`);
+        if (nextBtn) {
+            setInterval(() => {
+                nextBtn.click();
+            }, interval);
+        }
+    }
+
+    autoSlide('recent-buys-slider');
+    autoSlide('testimonials-slider');
+
     // Add scroll effect to header
     window.addEventListener('scroll', () => {
         const header = document.querySelector('header');

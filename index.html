@@ -96,7 +96,7 @@
         </div>
     </section>
 
-    <section class="service-boxes">
+    <section class="service-boxes reveal">
         <div class="container">
             <div class="box blue-box">
                 <div class="box-icon"><i class="fas fa-car"></i></div>
@@ -119,23 +119,23 @@
         </div>
     </section>
 
-    <section id="benefits" class="benefits">
+    <section id="benefits" class="benefits reveal">
         <div class="container">
             <h2 class="section-title">DLACZEGO WARTO NAS WYBRAĆ?</h2>
             <div class="benefits-grid">
-                <div class="benefit-item">
+                <div class="benefit-item reveal">
                     <i class="fas fa-award"></i>
                     <h4>GWARANCJA UCZCIWEJ CENY</h4>
                 </div>
-                <div class="benefit-item">
+                <div class="benefit-item reveal">
                     <i class="fas fa-stopwatch"></i>
                     <h4>SZYBKI DOJAZD GRATIS!</h4>
                 </div>
-                <div class="benefit-item">
+                <div class="benefit-item reveal">
                     <i class="fas fa-money-bill-wave"></i>
                     <h4>GOTÓWKA DO RĘKI</h4>
                 </div>
-                <div class="benefit-item">
+                <div class="benefit-item reveal">
                     <i class="fas fa-truck-monster"></i>
                     <h4>PROFESJONALNA LAWETA 24/7</h4>
                 </div>
@@ -144,21 +144,21 @@
     </section>
 
     <!-- Jak to działa (How It Works) -->
-    <section id="how-it-works" class="how-it-works">
+    <section id="how-it-works" class="how-it-works reveal">
         <div class="container">
             <h2 class="section-title">JAK TO DZIAŁA?</h2>
             <div class="steps-grid">
-                <div class="step">
+                <div class="step reveal">
                     <div class="step-num">1</div>
                     <h4>Wycena online</h4>
                     <p>Wypełnij formularz lub zadzwoń do nas. Podaj podstawowe dane o samochodzie.</p>
                 </div>
-                <div class="step">
+                <div class="step reveal">
                     <div class="step-num">2</div>
                     <h4>Przyjazd do klienta</h4>
                     <p>Dojedziemy we wskazane miejsce w Częstochowie i na Śląsku w najkrótszym możliwym czasie.</p>
                 </div>
-                <div class="step">
+                <div class="step reveal">
                     <div class="step-num">3</div>
                     <h4>Gotówka do ręki</h4>
                     <p>Po krótkich oględzinach podpisujemy umowę i wypłacamy pieniądze natychmiast.</p>
@@ -168,7 +168,7 @@
     </section>
 
     <!-- Brands We Buy -->
-    <section class="brands">
+    <section class="brands reveal">
         <div class="container">
             <h2 class="section-title">SKUPUJEMY WSZYSTKIE MARKI</h2>
             <div class="brands-flex">
@@ -186,56 +186,68 @@
         </div>
     </section>
 
-    <section class="recent-buys">
+    <section class="recent-buys reveal">
         <div class="container">
             <h2 class="section-title">OSTATNIE REALIZACJE</h2>
-            <div class="buys-grid">
-                <div class="buy-card">
-                    <div class="car-img" style="background-image: url('')"></div>
-                    <p>VW Golf</p>
+            <div class="slider-container" id="recent-buys-slider">
+                <div class="slider-track">
+                    <div class="buy-card slider-item">
+                        <div class="car-img" style="background-image: url('')"></div>
+                        <p>VW Golf</p>
+                    </div>
+                    <div class="buy-card slider-item">
+                        <div class="car-img" style="background-image: url('')"></div>
+                        <p>Audi A4</p>
+                    </div>
+                    <div class="buy-card slider-item">
+                        <div class="car-img" style="background-image: url('')"></div>
+                        <p>Ford Focus</p>
+                    </div>
+                    <div class="buy-card slider-item">
+                        <div class="car-img" style="background-image: url('')"></div>
+                        <p>Porsche 911 2019</p>
+                    </div>
                 </div>
-                <div class="buy-card">
-                    <div class="car-img" style="background-image: url('')"></div>
-                    <p>Audi A4</p>
-                </div>
-                <div class="buy-card">
-                    <div class="car-img" style="background-image: url('')"></div>
-                    <p>Ford Focus</p>
-                </div>
-                <div class="buy-card">
-                    <div class="car-img" style="background-image: url('')"></div>
-                    <p>Porsche 911 2019</p>
+                <div class="slider-nav">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Testimonials -->
-    <section class="testimonials">
+    <section class="testimonials reveal">
         <div class="container">
             <h2 class="section-title">CO MÓWIĄ O NAS KLIENCI</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial">
-                    <div class="stars">★★★★★</div>
-                    <p>"Szybka i profesjonalna obsługa. Skupili moje auto w ciągu 2 godzin od zgłoszenia. Polecam!"</p>
-                    <strong>Marek Z.</strong>
+            <div class="slider-container" id="testimonials-slider">
+                <div class="slider-track">
+                    <div class="testimonial slider-item">
+                        <div class="stars">★★★★★</div>
+                        <p>"Szybka i profesjonalna obsługa. Skupili moje auto w ciągu 2 godzin od zgłoszenia. Polecam!"</p>
+                        <strong>Marek Z.</strong>
+                    </div>
+                    <div class="testimonial slider-item">
+                        <div class="stars">★★★★★</div>
+                        <p>"Laweta przyjechała błyskawicznie po awarii na trasie. Bardzo miła obsługa i uczciwa cena."</p>
+                        <strong>Anna K.</strong>
+                    </div>
+                    <div class="testimonial slider-item">
+                        <div class="stars">★★★★★</div>
+                        <p>"Sprzedaż starego auta nigdy nie była tak prosta. Zero formalności, gotówka do ręki."</p>
+                        <strong>Piotr W.</strong>
+                    </div>
                 </div>
-                <div class="testimonial">
-                    <div class="stars">★★★★★</div>
-                    <p>"Laweta przyjechała błyskawicznie po awarii na trasie. Bardzo miła obsługa i uczciwa cena."</p>
-                    <strong>Anna K.</strong>
-                </div>
-                <div class="testimonial">
-                    <div class="stars">★★★★★</div>
-                    <p>"Sprzedaż starego auta nigdy nie była tak prosta. Zero formalności, gotówka do ręki."</p>
-                    <strong>Piotr W.</strong>
+                <div class="slider-nav">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ -->
-    <section class="faq">
+    <section class="faq reveal">
         <div class="container">
             <h2 class="section-title">CZĘSTO ZADAWANE PYTANIA</h2>
             <div class="faq-list">
