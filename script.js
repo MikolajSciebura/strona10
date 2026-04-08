@@ -194,7 +194,7 @@ if (contactForm) {
 
     reveals.forEach(reveal => revealObserver.observe(reveal));
 
-    // Enhanced Slider Functionality
+    // Refined Slider Functionality (Mobile Optimized)
     function initSlider(containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -211,6 +211,8 @@ if (contactForm) {
         let prevTranslate = 0;
         let animationID = 0;
         let autoSlideTimer;
+        let startY = 0;
+        let isScrolling = false;
 
         // Create Dots
         const dotsContainer = document.createElement('div');
@@ -237,9 +239,6 @@ if (contactForm) {
 
         function updateSlider() {
             const itemsPerView = getItemsPerView();
-            const maxIndex = Math.max(0, items.length - itemsPerView);
-            if (index > maxIndex) index = maxIndex;
-
             const gap = 20;
             const containerWidth = container.offsetWidth;
             const itemWidth = (containerWidth - (gap * (itemsPerView - 1))) / itemsPerView;
@@ -248,10 +247,7 @@ if (contactForm) {
                 item.style.flex = `0 0 ${itemWidth}px`;
             });
 
-            currentTranslate = index * -(itemWidth + gap);
-            prevTranslate = currentTranslate;
-            setSliderPosition();
-            updateDots();
+            setPositionByIndex();
         }
 
         function setSliderPosition() {
@@ -275,14 +271,14 @@ if (contactForm) {
             const itemWidth = items[0].offsetWidth;
             currentTranslate = index * -(itemWidth + gap);
             prevTranslate = currentTranslate;
-            track.style.transition = 'transform 0.5s ease-out';
+
+            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             setSliderPosition();
             updateDots();
 
-            // Remove transition after it finishes
             setTimeout(() => {
                 track.style.transition = 'none';
-            }, 500);
+            }, 400);
         }
 
         function nextSlide() {
@@ -307,20 +303,14 @@ if (contactForm) {
         }
 
         // Event Listeners
-        if (nextBtn) {
-            nextBtn.addEventListener('click', nextSlide);
-        }
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', prevSlide);
-        }
-
-        // Touch Events
-        track.addEventListener('touchstart', touchStart);
+        // Touch & Mouse Events
+        track.addEventListener('touchstart', touchStart, { passive: true });
         track.addEventListener('touchend', touchEnd);
-        track.addEventListener('touchmove', touchMove);
+        track.addEventListener('touchmove', touchMove, { passive: false });
 
-        // Mouse Events
         track.addEventListener('mousedown', touchStart);
         track.addEventListener('mouseup', touchEnd);
         track.addEventListener('mouseleave', touchEnd);
@@ -328,7 +318,10 @@ if (contactForm) {
 
         function touchStart(event) {
             isDragging = true;
+            isScrolling = false;
             startPos = getPositionX(event);
+            startY = getPositionY(event);
+
             animationID = requestAnimationFrame(animation);
             track.style.cursor = 'grabbing';
             track.style.transition = 'none';
@@ -336,17 +329,24 @@ if (contactForm) {
         }
 
         function touchEnd() {
+            if (!isDragging) return;
             isDragging = false;
             cancelAnimationFrame(animationID);
             track.style.cursor = 'grab';
 
             const movedBy = currentTranslate - prevTranslate;
-            const threshold = 50;
+            const gap = 20;
+            const itemWidth = items[0].offsetWidth + gap;
 
-            if (movedBy < -threshold) {
-                index += 1;
-            } else if (movedBy > threshold) {
-                index -= 1;
+            // Precise snapping logic
+            if (Math.abs(movedBy) > 50) { // Threshold for swipe
+                const indexChange = Math.round(Math.abs(movedBy) / itemWidth);
+                const jump = Math.max(1, indexChange);
+                if (movedBy < 0) {
+                    index += jump;
+                } else {
+                    index -= jump;
+                }
             }
 
             setPositionByIndex();
@@ -354,9 +354,26 @@ if (contactForm) {
         }
 
         function touchMove(event) {
+            if (!isDragging) return;
+
+            const currentX = getPositionX(event);
+            const currentY = getPositionY(event);
+
+            const diffX = currentX - startPos;
+            const diffY = currentY - startY;
+
+            // Check if user is scrolling vertically
+            if (!isScrolling) {
+                if (Math.abs(diffY) > Math.abs(diffX)) {
+                    isScrolling = true;
+                    isDragging = false;
+                    return;
+                }
+            }
+
             if (isDragging) {
-                const currentPosition = getPositionX(event);
-                currentTranslate = prevTranslate + currentPosition - startPos;
+                if (event.cancelable) event.preventDefault();
+                currentTranslate = prevTranslate + diffX;
             }
         }
 
@@ -364,9 +381,15 @@ if (contactForm) {
             return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
         }
 
+        function getPositionY(event) {
+            return event.type.includes('mouse') ? event.pageY : event.touches[0].clientY;
+        }
+
         function animation() {
-            setSliderPosition();
-            if (isDragging) requestAnimationFrame(animation);
+            if (isDragging) {
+                setSliderPosition();
+                requestAnimationFrame(animation);
+            }
         }
 
         function startAutoSlide() {

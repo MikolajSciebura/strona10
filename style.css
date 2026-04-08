@@ -413,6 +413,8 @@ nav a:hover, nav a.active {
     gap: 20px;
     user-select: none;
     cursor: grab;
+    touch-action: pan-y;
+    will-change: transform;
 }
 
 .slider-track:active {
