@@ -194,7 +194,7 @@ if (contactForm) {
 
     reveals.forEach(reveal => revealObserver.observe(reveal));
 
-    // Slider Functionality
+    // Enhanced Slider Functionality
     function initSlider(containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -202,7 +202,15 @@ if (contactForm) {
         const track = container.querySelector('.slider-track');
         const nextBtn = container.querySelector('.slider-next');
         const prevBtn = container.querySelector('.slider-prev');
-        const items = container.querySelectorAll('.slider-item');
+        const items = Array.from(container.querySelectorAll('.slider-item'));
+
+        let index = 0;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+        let autoSlideTimer;
 
         // Create Dots
         const dotsContainer = document.createElement('div');
@@ -213,64 +221,175 @@ if (contactForm) {
             if (i === 0) dot.classList.add('active');
             dot.addEventListener('click', () => {
                 index = i;
-                updateSlider();
+                setPositionByIndex();
+                resetAutoSlide();
             });
             dotsContainer.appendChild(dot);
         });
         container.appendChild(dotsContainer);
 
-        let index = 0;
+        function getItemsPerView() {
+            const width = window.innerWidth;
+            if (width > 992) return 3;
+            if (width > 768) return 2;
+            return 1;
+        }
 
         function updateSlider() {
-            const itemWidth = items[0].offsetWidth + 20; // width + gap
-            track.style.transform = `translateX(-${index * itemWidth}px)`;
+            const itemsPerView = getItemsPerView();
+            const maxIndex = Math.max(0, items.length - itemsPerView);
+            if (index > maxIndex) index = maxIndex;
 
-            // Update dots
+            const gap = 20;
+            const containerWidth = container.offsetWidth;
+            const itemWidth = (containerWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+
+            items.forEach(item => {
+                item.style.flex = `0 0 ${itemWidth}px`;
+            });
+
+            currentTranslate = index * -(itemWidth + gap);
+            prevTranslate = currentTranslate;
+            setSliderPosition();
+            updateDots();
+        }
+
+        function setSliderPosition() {
+            track.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        function updateDots() {
             const dots = dotsContainer.querySelectorAll('.dot');
             dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
         }
 
+        function setPositionByIndex() {
+            const itemsPerView = getItemsPerView();
+            const maxIndex = Math.max(0, items.length - itemsPerView);
+            if (index < 0) index = 0;
+            if (index > maxIndex) index = maxIndex;
+
+            const gap = 20;
+            const itemWidth = items[0].offsetWidth;
+            currentTranslate = index * -(itemWidth + gap);
+            prevTranslate = currentTranslate;
+            track.style.transition = 'transform 0.5s ease-out';
+            setSliderPosition();
+            updateDots();
+
+            // Remove transition after it finishes
+            setTimeout(() => {
+                track.style.transition = 'none';
+            }, 500);
+        }
+
+        // Event Listeners
         nextBtn.addEventListener('click', () => {
-            const visibleItems = Math.floor(container.offsetWidth / items[0].offsetWidth);
-            if (index < items.length - visibleItems) {
+            const itemsPerView = getItemsPerView();
+            if (index < items.length - itemsPerView) {
                 index++;
             } else {
-                index = 0; // Loop back
+                index = 0;
             }
-            updateSlider();
+            setPositionByIndex();
+            resetAutoSlide();
         });
 
         prevBtn.addEventListener('click', () => {
             if (index > 0) {
                 index--;
             } else {
-                const visibleItems = Math.floor(container.offsetWidth / items[0].offsetWidth);
-                index = items.length - visibleItems; // Go to last possible index
+                index = Math.max(0, items.length - getItemsPerView());
             }
-            updateSlider();
+            setPositionByIndex();
+            resetAutoSlide();
         });
 
+        // Touch Events
+        track.addEventListener('touchstart', touchStart);
+        track.addEventListener('touchend', touchEnd);
+        track.addEventListener('touchmove', touchMove);
+
+        // Mouse Events
+        track.addEventListener('mousedown', touchStart);
+        track.addEventListener('mouseup', touchEnd);
+        track.addEventListener('mouseleave', touchEnd);
+        track.addEventListener('mousemove', touchMove);
+
+        function touchStart(event) {
+            isDragging = true;
+            startPos = getPositionX(event);
+            animationID = requestAnimationFrame(animation);
+            track.style.cursor = 'grabbing';
+            track.style.transition = 'none';
+            stopAutoSlide();
+        }
+
+        function touchEnd() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            track.style.cursor = 'grab';
+
+            const movedBy = currentTranslate - prevTranslate;
+            const threshold = 50;
+
+            if (movedBy < -threshold) {
+                index += 1;
+            } else if (movedBy > threshold) {
+                index -= 1;
+            }
+
+            setPositionByIndex();
+            startAutoSlide();
+        }
+
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startPos;
+            }
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function animation() {
+            setSliderPosition();
+            if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function startAutoSlide() {
+            stopAutoSlide();
+            autoSlideTimer = setInterval(() => {
+                nextBtn.click();
+            }, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideTimer);
+        }
+
+        function resetAutoSlide() {
+            stopAutoSlide();
+            startAutoSlide();
+        }
+
         // Resize handling
-        window.addEventListener('resize', updateSlider);
+        window.addEventListener('resize', () => {
+            updateSlider();
+            setPositionByIndex();
+        });
+
+        // Initialize
+        updateSlider();
+        startAutoSlide();
     }
 
     initSlider('recent-buys-slider');
     initSlider('testimonials-slider');
-
-    // Auto-slide functionality (optional but nice)
-    function autoSlide(containerId, interval = 5000) {
-        const nextBtn = document.querySelector(`#${containerId} .slider-next`);
-        if (nextBtn) {
-            setInterval(() => {
-                nextBtn.click();
-            }, interval);
-        }
-    }
-
-    autoSlide('recent-buys-slider');
-    autoSlide('testimonials-slider');
 
     // Add scroll effect to header and Back to Top button
     const backToTop = document.getElementById('back-to-top');
