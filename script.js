@@ -1,30 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Toggle
+    // Mobile Menu Toggle with Overlay
     const menuToggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('nav');
 
+    // Create overlay if not exists
+    let overlay = document.querySelector('.nav-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
+        document.body.appendChild(overlay);
+    }
+
     if (menuToggle && nav) {
+        const toggleMenu = (show) => {
+            const isActive = show !== undefined ? show : !nav.classList.contains('active');
+            nav.classList.toggle('active', isActive);
+            menuToggle.classList.toggle('active', isActive);
+            overlay.classList.toggle('active', isActive);
+
+            const icon = menuToggle.querySelector('i');
+            if (isActive) {
+                icon.classList.replace('fa-bars', 'fa-times');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+                document.body.style.overflow = '';
+            }
+        };
+
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            nav.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-            const icon = menuToggle.querySelector('i');
-            if (nav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-                document.body.style.overflow = 'hidden'; // Lock scroll
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-                document.body.style.overflow = ''; // Unlock scroll
-            }
+            toggleMenu();
         });
 
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (nav.classList.contains('active') && !nav.contains(e.target) && !menuToggle.contains(e.target)) {
-                menuToggle.click();
-            }
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // Close menu on link click
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
         });
     }
 
