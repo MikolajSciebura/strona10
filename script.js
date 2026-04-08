@@ -4,15 +4,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.querySelector('nav');
 
     if (menuToggle && nav) {
-        menuToggle.addEventListener('click', () => {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             nav.classList.toggle('active');
+            menuToggle.classList.toggle('active');
             const icon = menuToggle.querySelector('i');
             if (nav.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
                 icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden'; // Lock scroll
             } else {
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-bars');
+                document.body.style.overflow = ''; // Unlock scroll
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (nav.classList.contains('active') && !nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                menuToggle.click();
             }
         });
     }
