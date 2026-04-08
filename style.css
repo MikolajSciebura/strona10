@@ -384,6 +384,7 @@ nav a:hover, nav a.active {
 .benefit-item:hover {
     transform: translateY(-10px);
     border-bottom: 3px solid var(--primary-color);
+    box-shadow: 0 15px 35px rgba(255, 152, 0, 0.15);
 }
 
 .benefit-item i {
@@ -443,6 +444,28 @@ nav a:hover, nav a.active {
 .slider-nav button:hover {
     background: #e68a00;
     transform: scale(1.1);
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.slider-dots .dot {
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.slider-dots .dot.active {
+    background: var(--primary-color);
+    width: 30px;
+    border-radius: 10px;
 }
 
 @media (max-width: 992px) {
@@ -980,6 +1003,35 @@ footer h3 {
     background: #e68a00;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    z-index: 999;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+
+#back-to-top:hover {
+    background: #e68a00;
+    transform: translateY(-5px);
+}
+
+#back-to-top.show {
+    display: flex;
 }
 
 .btn-submit:active {

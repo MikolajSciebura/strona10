@@ -183,7 +183,11 @@ if (contactForm) {
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active');
+                const delay = entry.target.getAttribute('data-delay') || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('active');
+                }, delay);
+                revealObserver.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1 });
@@ -200,13 +204,32 @@ if (contactForm) {
         const prevBtn = container.querySelector('.slider-prev');
         const items = container.querySelectorAll('.slider-item');
 
+        // Create Dots
+        const dotsContainer = document.createElement('div');
+        dotsContainer.className = 'slider-dots';
+        items.forEach((_, i) => {
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                index = i;
+                updateSlider();
+            });
+            dotsContainer.appendChild(dot);
+        });
+        container.appendChild(dotsContainer);
+
         let index = 0;
 
         function updateSlider() {
             const itemWidth = items[0].offsetWidth + 20; // width + gap
             track.style.transform = `translateX(-${index * itemWidth}px)`;
 
-            // Handle buttons visibility or state if needed
+            // Update dots
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
         }
 
         nextBtn.addEventListener('click', () => {
@@ -249,7 +272,8 @@ if (contactForm) {
     autoSlide('recent-buys-slider');
     autoSlide('testimonials-slider');
 
-    // Add scroll effect to header
+    // Add scroll effect to header and Back to Top button
+    const backToTop = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
         const header = document.querySelector('header');
         if (window.scrollY > 50) {
@@ -259,5 +283,22 @@ if (contactForm) {
             header.style.padding = '15px 0';
             header.style.background = '#0b132b';
         }
+
+        if (backToTop) {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        }
     });
+
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });
