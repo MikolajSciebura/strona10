@@ -783,6 +783,7 @@ footer h3 {
 }
 
 .hero-form-box input,
+.hero-form-box select,
 .hero-form-box textarea {
     width: 100%;
     padding: 12px 15px;
@@ -794,12 +795,39 @@ footer h3 {
     transition: all 0.3s ease;
 }
 
+.hero-form-box select option {
+    background: var(--accent-color);
+    color: white;
+}
+
 .hero-form-box input:focus,
+.hero-form-box select:focus,
 .hero-form-box textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     background: rgba(255,255,255,0.1);
     box-shadow: 0 0 10px rgba(255, 152, 0, 0.2);
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.checkbox-group label:hover {
+    color: white;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
 }
 
 .hero-form-box textarea {

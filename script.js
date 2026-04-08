@@ -79,6 +79,11 @@ if (valuationForm) {
         formData.append('form-type', 'valuation');
         formData.append('brand-model', valuationForm['brand-model'].value);
         formData.append('year', valuationForm['year'].value);
+        formData.append('mileage', valuationForm['mileage'].value);
+        formData.append('engine', valuationForm['engine'].value);
+        formData.append('fuel', valuationForm['fuel'].value);
+        formData.append('gearbox', valuationForm['gearbox'].value);
+        formData.append('damaged', valuationForm['damaged'].checked ? 'Tak' : 'Nie');
         formData.append('description', valuationForm['description'].value);
         formData.append('phone', valuationForm['phone'].value);
         formData.append('website', valuationForm['website'].value);
@@ -102,7 +107,7 @@ if (valuationForm) {
         }
 
         btn.disabled = false;
-        btn.textContent = 'WYŚLIJ ZGŁOSZENIE';
+        btn.textContent = 'WYŚLIJ WYCENĘ';
     });
 }
 
