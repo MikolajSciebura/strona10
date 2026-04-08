@@ -415,6 +415,7 @@ nav a:hover, nav a.active {
     cursor: grab;
     touch-action: pan-y;
     will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .slider-track:active {

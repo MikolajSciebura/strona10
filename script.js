@@ -194,74 +194,58 @@ if (contactForm) {
 
     reveals.forEach(reveal => revealObserver.observe(reveal));
 
-    // Refined Slider Functionality (Mobile Optimized)
+    // Robust Slider Functionality (High-Performance Mobile Snapping)
     function initSlider(containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         const track = container.querySelector('.slider-track');
-        const nextBtn = container.querySelector('.slider-next');
-        const prevBtn = container.querySelector('.slider-prev');
         const items = Array.from(container.querySelectorAll('.slider-item'));
 
         let index = 0;
         let isDragging = false;
-        let startPos = 0;
+        let startX = 0;
+        let startY = 0;
         let currentTranslate = 0;
         let prevTranslate = 0;
-        let animationID = 0;
-        let autoSlideTimer;
-        let startY = 0;
         let isScrolling = false;
+        let autoSlideTimer;
 
-        // Create Dots
+        // Create Dots - Fixed to match scrollable positions
         const dotsContainer = document.createElement('div');
         dotsContainer.className = 'slider-dots';
-        items.forEach((_, i) => {
-            const dot = document.createElement('span');
-            dot.className = 'dot';
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                index = i;
-                setPositionByIndex();
-                resetAutoSlide();
-            });
-            dotsContainer.appendChild(dot);
-        });
         container.appendChild(dotsContainer);
 
-        function getItemsPerView() {
-            const width = window.innerWidth;
-            if (width > 992) return 3;
-            if (width > 768) return 2;
-            return 1;
-        }
-
-        function updateSlider() {
-            const itemsPerView = getItemsPerView();
-            const gap = 20;
-            const containerWidth = container.offsetWidth;
-            const itemWidth = (containerWidth - (gap * (itemsPerView - 1))) / itemsPerView;
-
-            items.forEach(item => {
-                item.style.flex = `0 0 ${itemWidth}px`;
-            });
-
-            setPositionByIndex();
-        }
-
-        function setSliderPosition() {
-            track.style.transform = `translateX(${currentTranslate}px)`;
-        }
-
         function updateDots() {
-            const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((dot, i) => {
+            const itemsPerView = getItemsPerView();
+            const numDots = Math.max(1, items.length - itemsPerView + 1);
+
+            if (dotsContainer.children.length !== numDots) {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < numDots; i++) {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot';
+                    dot.addEventListener('click', () => {
+                        index = i;
+                        scrollToIndex();
+                        resetAutoSlide();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            Array.from(dotsContainer.children).forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
         }
 
-        function setPositionByIndex() {
+        function getItemsPerView() {
+            if (window.innerWidth > 992) return 3;
+            if (window.innerWidth > 768) return 2;
+            return 1;
+        }
+
+        function scrollToIndex() {
             const itemsPerView = getItemsPerView();
             const maxIndex = Math.max(0, items.length - itemsPerView);
             if (index < 0) index = 0;
@@ -272,99 +256,30 @@ if (contactForm) {
             currentTranslate = index * -(itemWidth + gap);
             prevTranslate = currentTranslate;
 
-            track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            setSliderPosition();
+            track.style.transition = 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+            track.style.transform = `translateX(${currentTranslate}px)`;
             updateDots();
-
-            setTimeout(() => {
-                track.style.transition = 'none';
-            }, 400);
         }
 
-        function nextSlide() {
-            const itemsPerView = getItemsPerView();
-            if (index < items.length - itemsPerView) {
-                index++;
-            } else {
-                index = 0;
-            }
-            setPositionByIndex();
-            resetAutoSlide();
-        }
-
-        function prevSlide() {
-            if (index > 0) {
-                index--;
-            } else {
-                index = Math.max(0, items.length - getItemsPerView());
-            }
-            setPositionByIndex();
-            resetAutoSlide();
-        }
-
-        // Event Listeners
-        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-
-        // Touch & Mouse Events
-        track.addEventListener('touchstart', touchStart, { passive: true });
-        track.addEventListener('touchend', touchEnd);
-        track.addEventListener('touchmove', touchMove, { passive: false });
-
-        track.addEventListener('mousedown', touchStart);
-        track.addEventListener('mouseup', touchEnd);
-        track.addEventListener('mouseleave', touchEnd);
-        track.addEventListener('mousemove', touchMove);
-
-        function touchStart(event) {
+        function handleDragStart(e) {
             isDragging = true;
             isScrolling = false;
-            startPos = getPositionX(event);
-            startY = getPositionY(event);
-
-            animationID = requestAnimationFrame(animation);
-            track.style.cursor = 'grabbing';
+            startX = getX(e);
+            startY = getY(e);
             track.style.transition = 'none';
             stopAutoSlide();
         }
 
-        function touchEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            cancelAnimationFrame(animationID);
-            track.style.cursor = 'grab';
-
-            const movedBy = currentTranslate - prevTranslate;
-            const gap = 20;
-            const itemWidth = items[0].offsetWidth + gap;
-
-            // Precise snapping logic
-            if (Math.abs(movedBy) > 50) { // Threshold for swipe
-                const indexChange = Math.round(Math.abs(movedBy) / itemWidth);
-                const jump = Math.max(1, indexChange);
-                if (movedBy < 0) {
-                    index += jump;
-                } else {
-                    index -= jump;
-                }
-            }
-
-            setPositionByIndex();
-            startAutoSlide();
-        }
-
-        function touchMove(event) {
+        function handleDragMove(e) {
             if (!isDragging) return;
 
-            const currentX = getPositionX(event);
-            const currentY = getPositionY(event);
+            const x = getX(e);
+            const y = getY(e);
+            const dx = x - startX;
+            const dy = y - startY;
 
-            const diffX = currentX - startPos;
-            const diffY = currentY - startY;
-
-            // Check if user is scrolling vertically
             if (!isScrolling) {
-                if (Math.abs(diffY) > Math.abs(diffX)) {
+                if (Math.abs(dy) > Math.abs(dx)) {
                     isScrolling = true;
                     isDragging = false;
                     return;
@@ -372,50 +287,71 @@ if (contactForm) {
             }
 
             if (isDragging) {
-                if (event.cancelable) event.preventDefault();
-                currentTranslate = prevTranslate + diffX;
+                if (e.cancelable) e.preventDefault();
+                currentTranslate = prevTranslate + dx;
+                track.style.transform = `translateX(${currentTranslate}px)`;
             }
         }
 
-        function getPositionX(event) {
-            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-        }
+        function handleDragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
 
-        function getPositionY(event) {
-            return event.type.includes('mouse') ? event.pageY : event.touches[0].clientY;
-        }
+            const gap = 20;
+            const itemWidth = items[0].offsetWidth + gap;
+            const movedBy = currentTranslate - prevTranslate;
 
-        function animation() {
-            if (isDragging) {
-                setSliderPosition();
-                requestAnimationFrame(animation);
+            if (Math.abs(movedBy) > 50) {
+                const direction = movedBy < 0 ? 1 : -1;
+                const jumps = Math.round(Math.abs(movedBy) / itemWidth) || 1;
+                index += (direction * jumps);
             }
+
+            scrollToIndex();
+            startAutoSlide();
         }
+
+        function getX(e) { return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; }
+        function getY(e) { return e.type.includes('mouse') ? e.pageY : e.touches[0].clientY; }
 
         function startAutoSlide() {
             stopAutoSlide();
             autoSlideTimer = setInterval(() => {
-                nextSlide();
+                const itemsPerView = getItemsPerView();
+                if (index < items.length - itemsPerView) {
+                    index++;
+                } else {
+                    index = 0;
+                }
+                scrollToIndex();
             }, 5000);
         }
 
-        function stopAutoSlide() {
-            clearInterval(autoSlideTimer);
-        }
+        function stopAutoSlide() { clearInterval(autoSlideTimer); }
+        function resetAutoSlide() { stopAutoSlide(); startAutoSlide(); }
 
-        function resetAutoSlide() {
-            stopAutoSlide();
-            startAutoSlide();
-        }
+        track.addEventListener('touchstart', handleDragStart, { passive: true });
+        track.addEventListener('touchmove', handleDragMove, { passive: false });
+        track.addEventListener('touchend', handleDragEnd);
 
-        // Resize handling
+        track.addEventListener('mousedown', handleDragStart);
+        window.addEventListener('mousemove', handleDragMove);
+        window.addEventListener('mouseup', handleDragEnd);
+
         window.addEventListener('resize', () => {
-            updateSlider();
-            setPositionByIndex();
+            const itemsPerView = getItemsPerView();
+            const gap = 20;
+            const itemWidth = (container.offsetWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+            items.forEach(item => item.style.flex = `0 0 ${itemWidth}px`);
+            scrollToIndex();
         });
 
-        // Initialize
-        updateSlider();
+        // Init Layout
+        const itemsPerView = getItemsPerView();
+        const gap = 20;
+        const itemWidth = (container.offsetWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        items.forEach(item => item.style.flex = `0 0 ${itemWidth}px`);
+        updateDots();
         startAutoSlide();
     }
 
