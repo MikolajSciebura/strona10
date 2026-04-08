@@ -72,8 +72,12 @@ if (valuationForm) {
     valuationForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = valuationForm.querySelector('.btn-submit');
+        const msgDiv = valuationForm.querySelector('#form-message');
+
         btn.disabled = true;
         btn.textContent = 'Wysyłanie...';
+        msgDiv.textContent = '';
+        msgDiv.className = 'form-message';
 
         const formData = new FormData();
         formData.append('form-type', 'valuation');
@@ -98,12 +102,17 @@ if (valuationForm) {
             const res = await fetch('send.php', { method: 'POST', body: formData });
             const text = await res.text();
             if (text === "OK") {
-                alert('✅ Wysłano!');
+                msgDiv.textContent = '✅ Wysłano pomyślnie!';
+                msgDiv.classList.add('success');
                 valuationForm.reset();
                 previewContainer.innerHTML = '';
-            } else alert('❌ ' + text);
+            } else {
+                msgDiv.textContent = '❌ ' + text;
+                msgDiv.classList.add('error');
+            }
         } catch {
-            alert('Błąd połączenia');
+            msgDiv.textContent = '❌ Błąd połączenia';
+            msgDiv.classList.add('error');
         }
 
         btn.disabled = false;
@@ -117,8 +126,12 @@ if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = contactForm.querySelector('.btn-submit');
+        const msgDiv = contactForm.querySelector('#form-message');
+
         btn.disabled = true;
         btn.textContent = 'Wysyłanie...';
+        msgDiv.textContent = '';
+        msgDiv.className = 'form-message';
 
         const formData = new FormData(contactForm);
 
@@ -126,11 +139,16 @@ if (contactForm) {
             const res = await fetch('send.php', { method: 'POST', body: formData });
             const text = await res.text();
             if (text === "OK") {
-                alert('✅ Wiadomość wysłana!');
+                msgDiv.textContent = '✅ Wiadomość wysłana!';
+                msgDiv.classList.add('success');
                 contactForm.reset();
-            } else alert('❌ ' + text);
+            } else {
+                msgDiv.textContent = '❌ ' + text;
+                msgDiv.classList.add('error');
+            }
         } catch {
-            alert('Błąd połączenia');
+            msgDiv.textContent = '❌ Błąd połączenia';
+            msgDiv.classList.add('error');
         }
 
         btn.disabled = false;
