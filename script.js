@@ -210,6 +210,13 @@ if (contactForm) {
         let prevTranslate = 0;
         let isScrolling = false;
         let autoSlideTimer;
+        let lastTouchTime = 0;
+
+        function getCurrentTranslate() {
+            const style = window.getComputedStyle(track);
+            const matrix = new WebKitCSSMatrix(style.transform);
+            return matrix.m41;
+        }
 
         // Create Dots - Fixed to match scrollable positions
         const dotsContainer = document.createElement('div');
@@ -262,23 +269,31 @@ if (contactForm) {
         }
 
         function handleDragStart(e) {
+            if (e.type === 'mousedown' && (e.button !== 0 || Date.now() - lastTouchTime < 500)) return;
+            if (e.type.startsWith('touch')) lastTouchTime = Date.now();
+
+            currentTranslate = getCurrentTranslate();
+            prevTranslate = currentTranslate;
+
             isDragging = true;
             isScrolling = false;
             startX = getX(e);
             startY = getY(e);
+
             track.style.transition = 'none';
+            void track.offsetWidth; // force reflow
             stopAutoSlide();
         }
 
         function handleDragMove(e) {
-            if (!isDragging) return;
+            if (!isDragging || isScrolling) return;
 
             const x = getX(e);
             const y = getY(e);
             const dx = x - startX;
             const dy = y - startY;
 
-            if (!isScrolling) {
+            if (!isScrolling && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
                 if (Math.abs(dy) > Math.abs(dx)) {
                     isScrolling = true;
                     isDragging = false;
@@ -287,32 +302,51 @@ if (contactForm) {
             }
 
             if (isDragging) {
-                if (e.cancelable) e.preventDefault();
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (e.cancelable) e.preventDefault();
+                }
                 currentTranslate = prevTranslate + dx;
                 track.style.transform = `translateX(${currentTranslate}px)`;
             }
         }
 
         function handleDragEnd() {
-            if (!isDragging) return;
+            if (!isDragging && !isScrolling) return;
+
+            const wasDragging = isDragging;
             isDragging = false;
+            isScrolling = false;
 
-            const gap = 20;
-            const itemWidth = items[0].offsetWidth + gap;
-            const movedBy = currentTranslate - prevTranslate;
+            if (wasDragging) {
+                const gap = 20;
+                const itemWidth = items[0].offsetWidth + gap;
+                const movedBy = currentTranslate - prevTranslate;
 
-            if (Math.abs(movedBy) > 50) {
-                const direction = movedBy < 0 ? 1 : -1;
-                const jumps = Math.round(Math.abs(movedBy) / itemWidth) || 1;
-                index += (direction * jumps);
+                // Threshold for direct index change or snapping
+                if (Math.abs(movedBy) > 50) {
+                    const direction = movedBy < 0 ? 1 : -1;
+                    index += direction;
+                } else {
+                    index = Math.round(Math.abs(currentTranslate) / itemWidth);
+                }
             }
 
             scrollToIndex();
             startAutoSlide();
         }
 
-        function getX(e) { return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; }
-        function getY(e) { return e.type.includes('mouse') ? e.pageY : e.touches[0].clientY; }
+        function getX(e) {
+            if (e.type.includes('mouse')) return e.pageX;
+            if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+            if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientX;
+            return 0;
+        }
+        function getY(e) {
+            if (e.type.includes('mouse')) return e.pageY;
+            if (e.touches && e.touches.length > 0) return e.touches[0].clientY;
+            if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientY;
+            return 0;
+        }
 
         function startAutoSlide() {
             stopAutoSlide();
@@ -333,10 +367,11 @@ if (contactForm) {
         track.addEventListener('touchstart', handleDragStart, { passive: true });
         track.addEventListener('touchmove', handleDragMove, { passive: false });
         track.addEventListener('touchend', handleDragEnd);
+        track.addEventListener('touchcancel', handleDragEnd);
 
         track.addEventListener('mousedown', handleDragStart);
-        window.addEventListener('mousemove', handleDragMove);
-        window.addEventListener('mouseup', handleDragEnd);
+        window.addEventListener('mousemove', (e) => isDragging && handleDragMove(e));
+        window.addEventListener('mouseup', (e) => (isDragging || isScrolling) && handleDragEnd(e));
 
         window.addEventListener('resize', () => {
             const itemsPerView = getItemsPerView();
