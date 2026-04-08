@@ -18,15 +18,17 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--text-light);
     background-color: var(--bg-dark);
     overflow-x: hidden;
+    font-size: 1.05rem;
 }
 
 h1, h2, h3, h4 {
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .container {
@@ -620,6 +622,23 @@ footer h3 {
     padding: 80px 0;
 }
 
+.service-text h3, .about-text h3, .tow-text h3 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+.service-text p, .about-text p, .tow-text p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 400;
+}
+
+.service-text strong, .about-text strong, .tow-text strong {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
 .about-grid, .service-grid, .tow-grid, .contact-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -653,7 +672,9 @@ footer h3 {
 }
 
 .check-list li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .check-list i {
