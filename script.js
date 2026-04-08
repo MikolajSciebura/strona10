@@ -285,8 +285,7 @@ if (contactForm) {
             }, 500);
         }
 
-        // Event Listeners
-        nextBtn.addEventListener('click', () => {
+        function nextSlide() {
             const itemsPerView = getItemsPerView();
             if (index < items.length - itemsPerView) {
                 index++;
@@ -295,9 +294,9 @@ if (contactForm) {
             }
             setPositionByIndex();
             resetAutoSlide();
-        });
+        }
 
-        prevBtn.addEventListener('click', () => {
+        function prevSlide() {
             if (index > 0) {
                 index--;
             } else {
@@ -305,7 +304,16 @@ if (contactForm) {
             }
             setPositionByIndex();
             resetAutoSlide();
-        });
+        }
+
+        // Event Listeners
+        if (nextBtn) {
+            nextBtn.addEventListener('click', nextSlide);
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+        }
 
         // Touch Events
         track.addEventListener('touchstart', touchStart);
@@ -364,7 +372,7 @@ if (contactForm) {
         function startAutoSlide() {
             stopAutoSlide();
             autoSlideTimer = setInterval(() => {
-                nextBtn.click();
+                nextSlide();
             }, 5000);
         }
 
