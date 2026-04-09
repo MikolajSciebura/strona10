@@ -67,6 +67,11 @@ try {
         // 🚗 Formularz wyceny auta
         $brand = trim($_POST['brand-model'] ?? '');
         $year = intval($_POST['year'] ?? 0);
+        $mileage = trim($_POST['mileage'] ?? '');
+        $engine = trim($_POST['engine'] ?? '');
+        $fuel = trim($_POST['fuel'] ?? '');
+        $gearbox = trim($_POST['gearbox'] ?? '');
+        $damaged = trim($_POST['damaged'] ?? 'Nie');
         $description = trim($_POST['description'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
 
@@ -78,6 +83,11 @@ try {
             <h2>Nowe zgłoszenie</h2>
             <b>Marka i model:</b> $brand <br>
             <b>Rok:</b> $year <br>
+            <b>Przebieg:</b> $mileage km <br>
+            <b>Silnik:</b> $engine <br>
+            <b>Paliwo:</b> $fuel <br>
+            <b>Skrzynia:</b> $gearbox <br>
+            <b>Uszkodzony:</b> $damaged <br>
             <b>Opis:</b> $description <br>
             <b>Telefon:</b> $phone
         ";
