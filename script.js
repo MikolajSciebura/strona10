@@ -8,17 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!nav || !menuToggle) return;
         nav.classList.toggle('active');
         if (overlay) overlay.classList.toggle('active');
-        document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+        const isActive = nav.classList.contains('active');
+        document.body.style.overflow = isActive ? 'hidden' : '';
 
         const icon = menuToggle.querySelector('i');
         if (icon) {
-            if (nav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
+            icon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        }
+
+        const header = document.querySelector('header');
+        if (header) {
+            header.classList.toggle('menu-open', isActive);
         }
     };
 

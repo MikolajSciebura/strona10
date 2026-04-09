@@ -58,7 +58,7 @@ header {
     background-color: #0b132b;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1005;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
@@ -75,6 +75,8 @@ header {
     flex: 0 1 auto; /* Allow logo to shrink if needed */
     display: flex;
     justify-content: flex-start;
+    position: relative;
+    z-index: 1006;
 }
 
 .logo img {
@@ -990,26 +992,48 @@ footer h3 {
     .menu-toggle {
         display: flex;
         order: 3;
+        position: relative;
+        z-index: 1006;
     }
 
     nav {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
+        width: 100%;
         height: 100vh;
         background: var(--bg-dark);
-        padding: 80px 40px;
+        padding: 120px 20px 40px;
         transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1001;
+        z-index: 1004;
         box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow-y: auto;
     }
 
     nav.active {
         right: 0;
+    }
+
+    .nav-mobile-cta {
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+        width: 100%;
+        align-items: center;
+    }
+
+    nav.active .nav-mobile-cta {
+        display: flex;
+    }
+
+    .nav-mobile-cta .btn-call {
+        width: 100%;
+        justify-content: center;
+        max-width: 300px;
     }
 
     .nav-overlay {
@@ -1042,6 +1066,14 @@ footer h3 {
         font-size: 1.2rem;
         display: block;
         padding: 10px;
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        color: var(--primary-color);
     }
 
     .top-bar .container {
@@ -1051,6 +1083,8 @@ footer h3 {
     .header-cta {
         order: 2;
         margin-right: 15px;
+        position: relative;
+        z-index: 1006;
     }
 }
 
@@ -1197,6 +1231,14 @@ footer h3 {
     .header-cta .btn-call {
         padding: 4px 6px;
     }
+
+    .header-cta .btn-number {
+        font-size: 0.8rem;
+    }
+
+    .header-cta i {
+        font-size: 0.9rem;
+    }
     .header-cta .btn-number {
         font-size: 0.7rem;
     }
@@ -1266,6 +1308,13 @@ header {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease;
+}
+
+header.menu-open {
+    background: var(--bg-dark) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 /* 1400px+ Scaling */
