@@ -194,7 +194,7 @@ nav a:hover, nav a.active {
 
 .hero-content {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -993,25 +993,55 @@ footer h3 {
     }
 
     nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
         background: var(--bg-dark);
-        padding: 20px;
-        text-align: center;
-        border-bottom: 2px solid var(--primary-color);
+        padding: 80px 40px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1001;
+        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     nav.active {
-        display: block;
+        right: 0;
+    }
+
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
     }
 
     nav ul {
         flex-direction: column;
-        gap: 15px;
+        gap: 25px;
+        width: 100%;
+        text-align: center;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+        display: block;
+        padding: 10px;
     }
 
     .top-bar .container {
@@ -1261,17 +1291,18 @@ header {
 @media (min-width: 992px) {
     .hero .hero-content {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         gap: 50px;
     }
     .hero-text {
         flex: 1;
-        text-align: left;
-        align-items: flex-start;
+        text-align: center;
+        align-items: center;
+        max-width: 800px;
     }
     .hero-text h2 {
-        text-align: left;
+        text-align: center;
     }
     .hero-form-box {
         flex: 0 0 400px;
