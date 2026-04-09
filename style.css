@@ -1238,3 +1238,156 @@ section.visible {
     background: var(--primary-color);
     transform: scale(1.2);
 }
+
+/* Enhanced Mobile Nav */
+.menu-toggle {
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 3px;
+    transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+    background: #fff;
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+    background: #fff;
+}
+
+header {
+    background-color: rgba(11, 19, 43, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+@media (max-width: 1100px) {
+    nav {
+        background: rgba(11, 19, 43, 0.95) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        padding-top: 100px !important;
+    }
+
+    nav.active li {
+        animation: slideInNav 0.5s forwards;
+        opacity: 0;
+    }
+
+    nav.active li:nth-child(1) { animation-delay: 0.1s; }
+    nav.active li:nth-child(2) { animation-delay: 0.2s; }
+    nav.active li:nth-child(3) { animation-delay: 0.3s; }
+    nav.active li:nth-child(4) { animation-delay: 0.4s; }
+    nav.active li:nth-child(5) { animation-delay: 0.5s; }
+}
+
+@keyframes slideInNav {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Benefit & Step Staggered Animations */
+.benefit-item, .step, .buy-card, .testimonial, .stat-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+section.visible .benefit-item,
+section.visible .step,
+section.visible .buy-card,
+section.visible .testimonial,
+section.visible .stat-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+section.visible .benefit-item:nth-child(2), section.visible .step:nth-child(2) { transition-delay: 0.1s; }
+section.visible .benefit-item:nth-child(3), section.visible .step:nth-child(3) { transition-delay: 0.2s; }
+section.visible .benefit-item:nth-child(4), section.visible .step:nth-child(4) { transition-delay: 0.3s; }
+
+/* Parallax Hero */
+.hero {
+    background-attachment: fixed;
+}
+
+/* Floating CTA Animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.btn-hero-call {
+    animation: float 3s ease-in-out infinite;
+}
+
+.btn-hero-call:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+/* Slider Navigation Buttons */
+.slider-prev, .slider-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.slider-prev { left: 10px; }
+.slider-next { right: 10px; }
+
+.slider-prev:hover, .slider-next:hover {
+    background: #fff;
+    color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+@media (max-width: 600px) {
+    .slider-prev, .slider-next {
+        display: none;
+    }
+}
+
+/* Card Zoom Effect */
+.buy-card .car-img {
+    transition: transform 0.5s ease;
+}
+
+.buy-card:hover .car-img {
+    transform: scale(1.1);
+}

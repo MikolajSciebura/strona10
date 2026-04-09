@@ -7,15 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuToggle && nav) {
         const toggleMenu = () => {
             nav.classList.toggle('active');
+            menuToggle.classList.toggle('active');
             if (navOverlay) navOverlay.classList.toggle('active');
-            const icon = menuToggle.querySelector('i');
+
             if (nav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
                 document.body.style.overflow = 'hidden';
             } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
                 document.body.style.overflow = '';
             }
         };
@@ -157,10 +154,8 @@ if (contactForm) {
                 // Close mobile menu if open
                 if (nav && nav.classList.contains('active')) {
                     nav.classList.remove('active');
+                    menuToggle.classList.remove('active');
                     if (navOverlay) navOverlay.classList.remove('active');
-                    const icon = menuToggle.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
                     document.body.style.overflow = '';
                 }
             }
@@ -206,21 +201,38 @@ const initSliders = () => {
         const dotsContainer = slider.querySelector('.slider-dots');
         const items = track.children;
 
+        let currentIndex = 0;
+        const totalItems = items.length;
+
+        const goToSlide = (index) => {
+            if (index < 0) index = 0;
+            if (index >= totalItems) index = totalItems - 1;
+
+            currentIndex = index;
+            const scrollAmount = items[currentIndex].offsetLeft - track.offsetLeft;
+
+            if (window.innerWidth <= 600) {
+                slider.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+            } else {
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+            }
+            updateDots(currentIndex);
+        };
+
+        // Navigation Arrows
+        const prevBtn = slider.querySelector('.slider-prev');
+        const nextBtn = slider.querySelector('.slider-next');
+
+        if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+        if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
         // Create dots
         if (dotsContainer) {
             Array.from(items).forEach((_, idx) => {
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
                 if (idx === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    const scrollAmount = items[idx].offsetLeft - track.offsetLeft;
-                    if (window.innerWidth <= 600) {
-                        slider.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-                    } else {
-                        track.style.transform = `translateX(-${scrollAmount}px)`;
-                    }
-                    updateDots(idx);
-                });
+                dot.addEventListener('click', () => goToSlide(idx));
                 dotsContainer.appendChild(dot);
             });
         }
