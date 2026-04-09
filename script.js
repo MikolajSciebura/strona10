@@ -235,8 +235,8 @@ if (contactForm) {
 
         function getCurrentTranslate() {
             const style = window.getComputedStyle(track);
-            const matrix = new WebKitCSSMatrix(style.transform);
-            return matrix.m41;
+            const matrix = new (window.WebKitCSSMatrix || DOMMatrix)(style.transform);
+            return matrix.m41 || matrix.e || 0;
         }
 
         // Create Dots - Fixed to match scrollable positions

@@ -779,13 +779,13 @@ footer h3 {
     padding: 80px 0;
 }
 
-.service-text h3, .about-text h3, .tow-text h3 {
+.service-text h3, .about-text h3, .tow-text h3, .tow-info h3 {
     font-size: 1.8rem;
     margin-bottom: 25px;
     color: var(--primary-color);
 }
 
-.service-text p, .about-text p, .tow-text p {
+.service-text p, .about-text p, .tow-text p, .tow-info p {
     font-size: 1.1rem;
     margin-bottom: 15px;
     font-weight: 400;

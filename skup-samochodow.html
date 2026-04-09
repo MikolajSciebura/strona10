@@ -131,10 +131,7 @@
                         <p class="form-subtitle">Otrzymaj bezpłatną wycenę w 15 minut!</p>
     <form id="valuation-form" enctype="multipart/form-data" method="post" action="send.php">
 
-    <!-- 🔒 honeypot (anty-spam) -->
-    <input type="text" name="website" style="display:none">
-
-    <!-- 🔹 typ formularza -->
+    <input type="hidden" name="website" style="display:none">
     <input type="hidden" name="form-type" value="valuation">
 
     <div class="form-group">
@@ -191,7 +188,7 @@
     <div class="form-group file-upload-wrapper">
         <label for="car-photos" class="file-upload-label">
             <i class="fas fa-camera"></i>
-            <span>Dodaj zdjęcia pojazdu</span>
+            <span>Dodaj zdjęcia pojazdu (opcjonalnie)</span>
         </label>
         <input type="file" id="car-photos" name="photos[]" accept="image/*" multiple hidden>
         <div id="file-preview-container" class="file-preview-grid"></div>
