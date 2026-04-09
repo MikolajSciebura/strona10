@@ -2,19 +2,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('nav');
+    const navOverlay = document.querySelector('.nav-overlay');
 
     if (menuToggle && nav) {
-        menuToggle.addEventListener('click', () => {
+        const toggleMenu = () => {
             nav.classList.toggle('active');
+            if (navOverlay) navOverlay.classList.toggle('active');
             const icon = menuToggle.querySelector('i');
             if (nav.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
                 icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
             } else {
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
             }
-        });
+        };
+
+        menuToggle.addEventListener('click', toggleMenu);
+        if (navOverlay) navOverlay.addEventListener('click', toggleMenu);
     }
 
 // 📌 Wycena auta
@@ -149,7 +156,12 @@ if (contactForm) {
                 
                 // Close mobile menu if open
                 if (nav && nav.classList.contains('active')) {
-                    menuToggle.click();
+                    nav.classList.remove('active');
+                    if (navOverlay) navOverlay.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    document.body.style.overflow = '';
                 }
             }
         });
@@ -167,3 +179,69 @@ if (contactForm) {
         }
     });
 });
+
+// 📌 Scroll Reveal Animation
+const revealOnScroll = () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+};
+
+document.addEventListener('DOMContentLoaded', revealOnScroll);
+
+// 📌 Slider Logic
+const initSliders = () => {
+    const sliders = document.querySelectorAll('.slider-container');
+
+    sliders.forEach(slider => {
+        const track = slider.querySelector('.slider-track');
+        const dotsContainer = slider.querySelector('.slider-dots');
+        const items = track.children;
+
+        // Create dots
+        if (dotsContainer) {
+            Array.from(items).forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (idx === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    const scrollAmount = items[idx].offsetLeft - track.offsetLeft;
+                    if (window.innerWidth <= 600) {
+                        slider.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    } else {
+                        track.style.transform = `translateX(-${scrollAmount}px)`;
+                    }
+                    updateDots(idx);
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        const updateDots = (activeIndex) => {
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === activeIndex);
+            });
+        };
+
+        // For mobile scroll snapping
+        if (window.innerWidth <= 600) {
+            slider.addEventListener('scroll', () => {
+                const scrollLeft = slider.scrollLeft;
+                const itemWidth = items[0].offsetWidth + 15;
+                const activeIndex = Math.round(scrollLeft / itemWidth);
+                updateDots(activeIndex);
+            });
+        }
+    });
+};
+
+document.addEventListener('DOMContentLoaded', initSliders);
