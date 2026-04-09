@@ -18,12 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             menuToggle.classList.toggle('active', isActive);
             overlay.classList.toggle('active', isActive);
 
-            const icon = menuToggle.querySelector('i');
             if (isActive) {
-                icon.classList.replace('fa-bars', 'fa-times');
                 document.body.style.overflow = 'hidden';
             } else {
-                icon.classList.replace('fa-times', 'fa-bars');
                 document.body.style.overflow = '';
             }
         };
