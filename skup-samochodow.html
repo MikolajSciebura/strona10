@@ -39,9 +39,6 @@
                     </a>
                 </div>
                 <nav>
-                    <div class="nav-mobile-header">
-                        <img src="logo.webp" alt="Logo Mobile" width="200">
-                    </div>
                     <ul>
                         <li><a href="index.html">STRONA GŁÓWNA</a></li>
                         <li><a href="o-nas.html">O NAS</a></li>
@@ -49,26 +46,6 @@
                         <li><a href="laweta-pomoc-drogowa.html">POMOC DROGOWA</a></li>
                         <li><a href="kontakt.html">KONTAKT</a></li>
                     </ul>
-                    <div class="nav-mobile-cta">
-                        <a href="tel:+48730035559" class="btn-call">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>
-                                <span class="btn-label">SKUP SAMOCHODÓW</span>
-                                <span class="btn-number">730 035 559</span>
-                            </span>
-                        </a>
-                        <a href="tel:+48790676446" class="btn-call">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>
-                                <span class="btn-label">POMOC DROGOWA</span>
-                                <span class="btn-number">790 676 446</span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="nav-mobile-info">
-                        <p><i class="fas fa-map-marker-alt"></i> Częstochowa i okolice</p>
-                        <p><i class="far fa-clock"></i> 24/7 - Działamy non-stop</p>
-                    </div>
                 </nav>
                 <div class="header-cta">
                     <a href="tel:+48730035559" class="btn-call">
@@ -87,9 +64,7 @@
                     </a>
                 </div>
                 <div class="menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <i class="fas fa-bars"></i>
                 </div>
             </div>
         </div>
@@ -101,10 +76,10 @@
         </div>
     </section>
 
-    <section class="service-details reveal">
+    <section class="service-details">
         <div class="container">
             <div class="service-grid">
-                <div class="service-text reveal">
+                <div class="service-text">
                     <h3>Skupujemy auta wszystkich marek i modeli, niezależnie od stanu technicznego:</h3>
                     <ul class="check-list">
                         <li>✔ Sprawne</li>
@@ -125,79 +100,78 @@
                     </ul>
                     <p> Działamy na terenie: Częstochowa, Śląskie, Radomsko, Wieluń, Piotrków Trybunalski, Bytom Sosnowiec, Katowice...</p>
                 </div>
-                <div class="service-valuation reveal">
-                    <div class="hero-form-box reveal">
+                <div class="service-valuation">
+                    <div class="hero-form-box">
                         <h3>DARMOWA WYCENA</h3>
                         <p class="form-subtitle">Otrzymaj bezpłatną wycenę w 15 minut!</p>
-    <form id="valuation-form" enctype="multipart/form-data" method="post" action="send.php">
+                        <form id="valuation-form" enctype="multipart/form-data" method="post" action="send.php">
 
-    <input type="hidden" name="website" style="display:none">
-    <input type="hidden" name="form-type" value="valuation">
+                            <input type="hidden" name="website" style="display:none">
+                            <input type="hidden" name="form-type" value="valuation">
 
-    <div class="form-group">
-        <input type="text" name="brand-model" placeholder="Marka i model" required>
-    </div>
+                            <div class="form-group">
+                                <input type="text" name="brand-model" placeholder="Marka i model" required>
+                            </div>
 
-    <div class="form-group">
-        <input type="number" name="year" placeholder="Rok produkcji" required>
-    </div>
+                            <div class="form-group">
+                                <input type="number" name="year" placeholder="Rok produkcji" required>
+                            </div>
 
-    <div class="form-group">
-        <input type="number" name="mileage" placeholder="Przebieg (km)" required>
-    </div>
+                            <div class="form-group">
+                                <input type="number" name="mileage" placeholder="Przebieg (km)" required>
+                            </div>
 
-    <div class="form-group">
-        <input type="text" name="engine" placeholder="Silnik (np. 2.0 TDI 150KM)" required>
-    </div>
+                            <div class="form-group">
+                                <input type="text" name="engine" placeholder="Silnik (np. 2.0 TDI 150KM)" required>
+                            </div>
 
-    <!-- 🔥 NOWE -->
-    <div class="form-group">
-        <select name="fuel" required>
-            <option value="">Rodzaj paliwa</option>
-            <option>Benzyna</option>
-            <option>Diesel</option>
-            <option>Hybryda</option>
-            <option>Elektryczny</option>
-            <option>LPG</option>
-        </select>
-    </div>
+                            <div class="form-group">
+                                <select name="fuel" required>
+                                    <option value="">Rodzaj paliwa</option>
+                                    <option>Benzyna</option>
+                                    <option>Diesel</option>
+                                    <option>Hybryda</option>
+                                    <option>Elektryczny</option>
+                                    <option>LPG</option>
+                                </select>
+                            </div>
 
-    <div class="form-group">
-        <select name="gearbox" required>
-            <option value="">Skrzynia biegów</option>
-            <option>Manualna</option>
-            <option>Automatyczna</option>
-        </select>
-    </div>
+                            <div class="form-group">
+                                <select name="gearbox" required>
+                                    <option value="">Skrzynia biegów</option>
+                                    <option>Manualna</option>
+                                    <option>Automatyczna</option>
+                                </select>
+                            </div>
 
-    <div class="form-group checkbox-group">
-        <label>
-            <input type="checkbox" name="damaged" value="Tak">
-            Auto uszkodzone
-        </label>
-    </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="damaged" value="Tak">
+                                    Auto uszkodzone
+                                </label>
+                            </div>
 
-    <div class="form-group">
-        <textarea name="description" placeholder="Opis (opcjonalnie)"></textarea>
-    </div>
+                            <div class="form-group">
+                                <textarea name="description" placeholder="Opis (opcjonalnie)"></textarea>
+                            </div>
 
-    <div class="form-group">
-        <input type="tel" name="phone" placeholder="Telefon" required>
-    </div>
+                            <div class="form-group">
+                                <input type="tel" name="phone" placeholder="Telefon" required>
+                            </div>
 
-    <div class="form-group file-upload-wrapper">
-        <label for="car-photos" class="file-upload-label">
-            <i class="fas fa-camera"></i>
-            <span>Dodaj zdjęcia pojazdu (opcjonalnie)</span>
-        </label>
-        <input type="file" id="car-photos" name="photos[]" accept="image/*" multiple hidden>
-        <div id="file-preview-container" class="file-preview-grid"></div>
-    </div>
+                            <div class="form-group file-upload-wrapper">
+                                <label for="car-photos" class="file-upload-label">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Dodaj zdjęcia pojazdu</span>
+                                </label>
+                                <input type="file" id="car-photos" name="photos[]" accept="image/*" multiple hidden>
+                                <div id="file-preview-container" class="file-preview-grid"></div>
+                            </div>
 
-    <button type="submit" class="btn-submit">WYŚLIJ WYCENĘ</button>
-    <div id="form-message" class="form-message"></div>
+                            <button type="submit" class="btn-submit">WYŚLIJ WYCENĘ</button>
+                            <div id="form-status"></div>
 
-</form>
+                        </form>
                     </div>
                 </div>
             </div>

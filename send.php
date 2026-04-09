@@ -101,6 +101,7 @@ try {
             if (count($_FILES['photos']['name']) > $maxFiles) die("Max 5 zdjęć");
 
             foreach ($_FILES['photos']['tmp_name'] as $key => $tmp) {
+                if (empty($tmp)) continue;
                 $type = $_FILES['photos']['type'][$key];
                 $size = $_FILES['photos']['size'][$key];
 
